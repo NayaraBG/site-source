@@ -1,25 +1,27 @@
-name: Auto deploy
+name: Deploy
 
 on:
   push:
     branches: [ main ]
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Create site
+      - name: Build site
         run: |
           mkdir -p dist
           echo "<h1>Holii</h1>" > dist/index.html
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          personal_token: ${{ secrets.PUBLISH_TOKEN }}
-          external_repository: TU_USUARIO/site-public
-          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
